@@ -1,0 +1,82 @@
+@(filesList: List[FileModel]) @main("Download"){
+
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+
+
+<script type="text/javascript">
+	var startdate = "";
+	var enddate = "";
+
+	$(function() {
+		$("#startdate").datepicker({
+			dateFormat : "dd-mm-yy"
+		});
+
+	});
+
+	$(function() {
+		$("#enddate").datepicker({
+			dateFormat : "dd-mm-yy"
+		});
+	});
+
+	function download(filename) {
+		var postUrl = 'download/files/' + $("#startdate").val() + "&" + $("#enddate").val();
+		$
+				.ajax({
+					type : 'POST',
+					url : postUrl,
+					beforeSend : function() {
+						//$('#downloading').html('<img src="@routes.Assets.at("images/ajax-loader.gif")" alt="Loading..." />');
+						$('#downloading')
+								.html(
+										'<div class="progress progress-striped active"><div class="bar" style="width: 60%;"></div></div>');
+					},
+					success : function() {
+						$('#downloading')
+								.html(
+										'Finished!<a href="/download"> Refresh the list</a>');
+					}
+				});
+	}
+</script>
+
+<div class="row-fluid">
+	<div class="span7">
+		<h3>Available downloads</h3>
+		<hr />
+		<div class="span7">
+			@for(file <- filesList){
+			<ul>
+				<li><a href='@routes.Assets.at(file.getFilename())'
+					target="_blank"> @file.filename </a></li>
+			</ul>
+
+			}
+		</div>
+	</div>
+	<div class="span5">
+   	<h3>Query new file</h3> <hr/>
+   	<form class="">
+	   	<div class="control-group">
+		    <label class="control-label" for="startdate">Start date</label>
+		    <div class="controls">
+		      <input type="text" id="startdate" placeholder="Start date">
+		    </div>
+	  	</div>
+	  	<div class="control-group">
+		    <label class="control-label" for="enddate">End date</label>
+		    <div class="controls">
+		      <input type="text" id="enddate" placeholder="End date">
+		    </div>
+	  	</div>
+	  	<div class="control-group">
+			<div class="controls" id="downloading">
+		  		<button type="submit" class="btn" onclick="download()">Query</button>
+				<small>(it may take a long time)</small>
+			</div>
+		</div>
+	</form>
+	</div>
+</div>
+}

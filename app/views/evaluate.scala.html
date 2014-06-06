@@ -1,0 +1,130 @@
+@(teamList: List[Team])
+
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+</style>
+
+@main("Welcome to the challenge") {
+
+   	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script class="graph">
+        function run(filePath){
+                var filePath = filePath;
+                var margin = {top: 20, right: 20, bottom: 30, left: 150},
+                width = 960 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
+
+                //var parseDate = d3.time.format("%d-%b-%y").parse;
+
+                var x = d3.time.scale()
+                    .range([0, width]);
+
+                var y = d3.scale.linear()
+                    .range([height, 0]);
+
+                var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom");
+
+                var yAxis = d3.svg.axis()
+                    .scale(y)
+                    .orient("left");
+
+                var line = d3.svg.line()
+                    .x(function(d) { return x(d.date); })
+                    .y(function(d) { return y(d.close); });
+
+                var svg = d3.select("body").append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                  .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                d3.tsv(filePath, function(error, data) {
+                  data.forEach(function(d) {
+                    d.date = d.timestamp;
+                    d.close = d.match;
+                  });
+
+                  x.domain(d3.extent(data, function(d) { return d.date; }));
+                  y.domain(d3.extent(data, function(d) { return d.close; }));
+
+                  svg.append("g")
+                      .attr("class", "x axis")
+                      .attr("transform", "translate(0," + height + ")")
+                      .call(xAxis);
+
+                  svg.append("g")
+                      .attr("class", "y axis")
+                      .call(yAxis)
+                    .append("text")
+                      .attr("transform", "rotate(-90)")
+                      .attr("y", 6)
+                      .attr("dy", ".71em")
+                      .style("text-anchor", "end")
+                      .text("Clicks'");
+
+                  svg.append("path")
+                      .datum(data)
+                      .attr("class", "line")
+                      .attr("d", line);
+                });
+        };
+    </script>
+	<script>
+	function create_data(email){
+		$.ajax({
+			url: "evaluate/createdata/" + email,
+            type: "GET",
+            complete: function(xhr, textStatus) {
+            //called when complete
+            },
+            success: function(data, textStatus, xhr) {
+                //called when successful
+                var filePath = @routes.Assets.at("") + data;
+                run(filePath);
+            }
+		});
+	};
+
+
+	</script>
+
+	<div class="btn-group">
+	  <a class="btn btn-large dropdown-toggle" data-toggle="dropdown" href="#">
+	    Teams
+	    <span class="caret"></span>
+	  </a>
+	  <ul class="dropdown-menu">
+	  	@for(team <- teamList){
+	  		<li><a href='#' onclick='create_data("@team.email")'>@team.teamName</a>
+	  	}
+	    <!-- dropdown menu links -->
+	  </ul>
+	</div>
+    <script id="graph">
+
+    </script>
+}

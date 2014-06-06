@@ -1,0 +1,42 @@
+@(signupForm: Form[Team])
+
+@main("Sign-up") {
+    @helper.form(action = routes.Signup.submit) {
+        
+        <fieldset>
+            <legend>Account information</legend>
+            
+            @helper.inputText(
+                signupForm("teamName"), 
+                '_label -> "Team Name", 
+                '_help -> "",
+                '_error -> signupForm.globalError
+            )
+            
+            @helper.inputText(
+                signupForm("email"), '_label -> "Email",
+                '_help -> ""
+            )
+            
+            @helper.inputPassword(
+                signupForm("password"), 
+                '_label -> "Password",
+                '_help -> "(A password must be at least 6 characters.)"
+            )
+            
+            @helper.inputPassword(
+                signupForm("repeatPassword"), 
+                '_label -> "Repeat password",
+                '_help -> "",
+                '_error -> signupForm.error("password")
+            )
+            
+        </fieldset>
+ 
+        <div class="actions">
+            <input type="submit" class="btn primary" value="Sign Up">
+            <a href="@routes.Application.index" class="btn">Cancel</a>
+        </div>
+        
+    }
+}

@@ -1,0 +1,28 @@
+
+## START APPLICATION
+You have to use play console to start the application. 
+  1. go to application with terminal or cmd console 
+  2. start there  the play-console : ~/RecommenderStreamEval/play
+  3. type 'eclipse' to make the application able to eclipse
+  4. type 'run' to start the application. 
+  5. open localhost:9000 with your web browser   
+
+## USING APPLICATION
+1. About-Tab
+2. Documents
+	- Description, how to got a request from server.
+3. Download
+	- TODO	
+4. Evaluation 
+5. Recommender
+	- evaluate your recommender. For example the RecommenderTest will be evaluated in this Version. 
+	The right table show some regression value of the recommendation's
+6. Sign-In
+	- you can login to get your id.
+7. Sign-Up
+	- register new account. 
+
+## ERROR
+ In this evaluated example we use the class SimpleRegression to calculate some regression value. The
+ library file stands in directory lib/. If the compiler can't identify this library automatically, you
+ have to configure it in project properties.  

@@ -1,0 +1,125 @@
+@(teamList: List[Team])
+<meta charset="utf-8">
+<style>
+body {
+	font: 10px sans-serif;
+}
+
+.axis path,.axis line {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}
+
+.x.axis path {
+	display: none;
+}
+
+.line {
+	fill: none;
+	stroke: steelblue;
+	stroke-width: 1.5px;
+}
+</style>
+@main("Recommender") {
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script>
+	function create_data(teamId) {
+		var database = document.getElementById("database").value;
+		document.getElementById("reRunning").style.display = "block";
+		document.getElementById("reFinish").style.display = "none";
+		document.getElementById("evRunning").style.display = "none";
+		document.getElementById("evFinish").style.display = "none";
+		$.ajax({
+			url : "recommender/run/" + teamId + ":" + database,
+			type : "GET",
+			complete : function(xhr, textStatus) {
+				//called when complete
+			},
+			success : function(data, textStatus, xhr) {
+				document.getElementById("reRunning").style.display = "none";
+				document.getElementById("reFinish").style.display = "block";
+				runEvaluation(teamId);
+			}
+		});
+	};
+</script>
+<script>
+	function runEvaluation(teamId) {
+		document.getElementById("evRunning").style.display = "block";
+		$.ajax({
+			url : "recommender/evaluate/" + teamId,
+			type : "GET",
+			complete : function(xhr, textStatus) {
+				//called when complete
+			},
+			success : function(data, textStatus, xhr) {
+				document.getElementById("first").value = data[0];
+				document.getElementById("2nd").value = data[1];
+				document.getElementById("3rd").value = data[2];
+				document.getElementById("4th").value = data[3];
+				document.getElementById("5th").value = data[4];
+				document.getElementById("6th").value = data[5];
+				document.getElementById("7th").value = data[6];
+				document.getElementById("8th").value = data[7];
+				document.getElementById("9th").value = data[8];
+				document.getElementById("evRunning").style.display = "none";
+				document.getElementById("evFinish").style.display = "block";
+			}
+		});
+	};
+</script>
+<div class="row-fluid">
+	<div class="span3">
+		<h3>Available Teams</h3>
+		<hr />
+		<div class="btn-group">
+			<a class="btn btn-large dropdown-toggle" data-toggle="dropdown"
+				href="#"> Teams <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				@for(team <- teamList){
+				<li><a href='#' onclick='create_data("@team._id")'>@team.teamName</a></li>
+				}
+				<!-- dropdown menu links -->
+			</ul>
+		</div>
+		<div>
+			<ul>
+				<li id="reRunning" style="display:none;"> <h5>Recommendation process is running!</h5></li>
+				<li id="reFinish" style="display:none;"> <h5>Recommendation process is finished!</h5></li>
+				<li id="evRunning" style="display:none;"> <h5>Trying to evaluation the recommendation!</h5></li>
+				<li id="evFinish" style="display:none;"> <h5>Evaluation process is finished!</h5></li>
+			</ul>
+		</div>
+	</div>
+	<div class="span4">
+		<h3>Available Databases</h3>
+		<hr />
+		<div class="btn-group">
+			<select id="database">
+				<option> Twitter </option>
+				<option> MovieLens </option>
+			</select>
+		</div>
+		
+	</div>
+	<div class="span5">
+		<h3>Evaluation Results</h3>
+		<hr />
+		<div>
+			<table>
+			<tr><td>Intercept:</td><td> <input id="first" type="text" value="0"></td></tr>
+			<tr><td>InterceptStdErr:</td><td> <input id="2nd" type="text" value="0"></td></tr>
+			<tr><td>MeanSquareError:</td><td> <input id="3rd" type="text" value="0"></td></tr>
+			<tr><td>R:</td><td> <input id="4th" type="text" value="0"></td></tr>
+			<tr><td>RSquare:</td><td> <input id="5th" type="text" value="0"></td></tr>
+			<tr><td>Slope:</td><td> <input id="6th" type="text" value="0"></td></tr>
+			<tr><td>SlopeStdErr:</td><td> <input id="7th" type="text" value="0"></td></tr>
+			<tr><td>RegressionSumSquares:</td><td> <input id="8th" type="text" value="0"></td></tr>
+			<tr><td>TotalSumSquares:</td><td> <input id="9th" type="text" value="0"></td></tr>
+			</table>
+		</div>
+	</div>
+</div>
+}

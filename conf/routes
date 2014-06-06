@@ -1,0 +1,39 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index()
+
+# About
+GET		/about						controllers.Application.about()
+
+# Document
+GET		/document					controllers.Application.document()
+
+#Sign-In
+GET		/signin							controllers.Signin.index()
+POST	/signin/submit					controllers.Signin.submit()
+
+#Sign-up
+GET		/signup							controllers.Signup.index()
+POST	/signup/submit					controllers.Signup.submit()
+
+# Downloads
+GET 	/download					controllers.Download.index()	
+POST	/download/files/:date		controllers.Download.createFilesByDate(date: String)
+
+# Recommender
+GET		/recommender					controllers.Recommender.index()
+GET		/recommender/run/:teamId		controllers.Recommender.run(teamId: String)
+GET 	/recommender/evaluate/:teamId			controllers.Recommender.evaluate(teamId: String)
+
+# Evaluate
+GET		/evaluate/start/:database/:teamId			controllers.Evaluate.getRequestByTeamId(database: String,teamId: String)
+GET		/evaluate/recommend/:teamId		controllers.Evaluate.getRecommendedItemByTeamId(teamId: String)
+GET		/evaluate/recommend/:teamId/:recommendations		controllers.Evaluate.sendRecommendations2Server(teamId: String, recommendations: String)
+GET		/evaluate/createdata/:email		controllers.Evaluate.createData(email: String)
+GET		/evaluate						controllers.Evaluate.index()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

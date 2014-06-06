@@ -1,0 +1,31 @@
+@(signinForm: Form[Team])
+
+@main("Sign-in") {
+    
+ @helper.form(action = routes.Signin.submit) {
+        <fieldset>
+            @helper.inputText(
+                signinForm("email"), '_label -> "Email",
+                '_help -> ""
+            )
+            
+            @helper.inputPassword(
+                signinForm("password"), 
+                '_label -> "Password",
+                '_help -> ""
+            )
+        
+        </fieldset>
+ 
+        <div class="actions">
+            <input type="submit" class="btn primary" value="Sign In">
+        </div>
+        @if(signinForm.hasErrors) {
+        <div class="alert-message error">
+        	<p></p>
+            <p><strong>No team was found.</strong> <a href="/signup">Sign up here.</a></p>
+        </div>
+    }
+    
+	}
+}
